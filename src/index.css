@@ -1,0 +1,162 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #131313;
+    color: #ffffff;
+    font-family: 'Be Vietnam Pro', sans-serif;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Lexend', sans-serif;
+  }
+}
+
+@layer utilities {
+  .animate-spin-3d {
+    animation: spin-3d 3s linear infinite;
+  }
+  .animate-float {
+    animation: ball-float 2s ease-in-out infinite;
+  }
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+  .blend-screen {
+    mix-blend-mode: screen;
+  }
+  .mask-ball {
+    /* Corte seco para eliminar o halo escuro */
+    mask-image: radial-gradient(circle, black 65%, transparent 66%);
+    -webkit-mask-image: radial-gradient(circle, black 65%, transparent 66%);
+  }
+  .animate-flash {
+    animation: flash-reveal 0.6s ease-out forwards;
+  }
+  .animate-slot {
+    animation: slot-roll 0.2s ease-in-out infinite;
+  }
+  .animate-flip-in {
+    animation: flip-in 2.5s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+  }
+  .animate-balloon {
+    animation: float-up-balloon forwards;
+  }
+  .animate-shimmer {
+    animation: shimmer 3s infinite;
+  }
+}
+
+@keyframes float-up-balloon {
+  0% { transform: translateY(110vh) rotate(-10deg) scale(0.8); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: translateY(-30vh) rotate(15deg) scale(1.1); opacity: 0; }
+}
+
+@keyframes flip-in {
+  0% { transform: perspective(1000px) rotateY(1440deg) scale(0.6); opacity: 0; }
+  10% { opacity: 1; }
+  100% { transform: perspective(1000px) rotateY(0deg) scale(1); opacity: 1; }
+}
+
+@keyframes ball-float {
+  0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+  50% { transform: translateY(-15px) scale(1.05) rotate(10deg); }
+}
+
+@keyframes spin-3d {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes slot-roll {
+  0% { transform: translateY(100%); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-150%) skewX(-12deg); }
+  50% { transform: translateX(150%) skewX(-12deg); }
+  100% { transform: translateX(150%) skewX(-12deg); }
+}
+
+@keyframes flash-reveal {
+  0% { filter: brightness(1); transform: scale(1); box-shadow: 0 0 0 rgba(240,102,0,0); }
+  50% { filter: brightness(2); transform: scale(1.05); box-shadow: 0 0 30px rgba(240,102,0,0.5); }
+  100% { filter: brightness(1); transform: scale(1); box-shadow: 0 0 10px rgba(240,102,0,0.1); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Print Optimization */
+@media print {
+  nav, aside, .print\:hidden, button, .no-print {
+    display: none !important;
+  }
+  
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .bg-\[\#1c1b1b\], .bg-\[\#2a2a2a\], .bg-\[\#131313\] {
+    background: white !important;
+    border-color: #eee !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+
+  .text-white {
+    color: black !important;
+  }
+
+  table {
+    border-collapse: collapse !important;
+  }
+
+  th {
+    background: #f5f5f5 !important;
+    color: #333 !important;
+    border: 1px solid #ddd !important;
+  }
+
+  td {
+    border: 1px solid #eee !important;
+    color: black !important;
+  }
+
+  .text-primary, .text-green-400, .text-red-400 {
+    color: black !important;
+    font-weight: bold !important;
+  }
+
+  /* Force print background colors if needed (browser setting) */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}
