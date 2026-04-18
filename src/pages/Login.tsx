@@ -4,21 +4,30 @@ import { CircleDot, Info, AlertTriangle } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 
 export default function Login() {
-  const { login } = useAppContext();
+  const { login, loginWithGoogle } = useAppContext();
   const navigate = useNavigate();
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setIsSubmitting(true);
 
-    if (login(email, password)) {
-      navigate('/');
-    } else {
-      setError('E-mail ou senha incorretos. Tente admin@futsal.com / 123');
+    try {
+      const success = await login(email, password);
+      if (success) {
+        navigate('/');
+      } else {
+        setError('E-mail ou senha incorretos.');
+      }
+    } catch (err) {
+      setError('Erro ao conectar ao servidor.');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -53,58 +62,22 @@ export default function Login() {
         <div className="w-full max-w-md space-y-8">
           <div className="space-y-2">
             <h3 className="font-headings font-extrabold text-3xl text-[#e5e2e1]">BEM-VINDO AO JOGO</h3>
-            <p className="text-[#e3bfb2] font-medium text-sm">Entre com suas credenciais para acessar o painel.</p>
+          <div className="grid grid-cols-1 gap-4">
+            <button 
+              type="button"
+              onClick={() => loginWithGoogle()}
+              className="flex items-center justify-center gap-3 w-full bg-[#1c1b1b] border border-[#353534] hover:bg-[#252424] py-3.5 rounded-lg font-bold text-white transition-all active:scale-[0.98]"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#EA4335" d="M12 5.04c1.94 0 3.7.67 5.08 2l3.8-3.8C18.47 1.15 15.42 0 12 0 7.31 0 3.25 2.69 1.18 6.6l4.43 3.44c1.05-3.14 4-5.04 6.39-5.04z" />
+                <path fill="#4285F4" d="M23.49 12.27c0-.8-.07-1.57-.2-2.32H12v4.39h6.44c-.28 1.44-1.09 2.66-2.31 3.48l3.6 2.8c2.1-1.93 3.32-4.78 3.32-8.35z" />
+                <path fill="#FBBC05" d="M5.61 14.56c-.26-.8-.41-1.65-.41-2.56s.15-1.76.41-2.56L1.18 6.6C.43 8.22 0 10.06 0 12s.43 3.78 1.18 5.4l4.43-3.44z" />
+                <path fill="#34A853" d="M12 24c3.24 0 5.95-1.07 7.93-2.91l-3.6-2.8c-1.16.78-2.65 1.25-4.33 1.25-3.34 0-6.17-2.25-7.18-5.28l-4.43 3.44C3.25 21.31 7.31 24 12 24z" />
+              </svg>
+              LOGAR COM GOOGLE
+            </button>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-500/10 border border-red-500/20 p-4 rounded-lg flex items-center gap-3 animate-shake">
-                <AlertTriangle className="text-red-500 w-5 h-5 flex-shrink-0" />
-                <p className="text-xs text-red-500 font-bold uppercase tracking-tight">{error}</p>
-              </div>
-            )}
-
-            <div className="space-y-1.5">
-              <label className="font-headings font-bold text-[10px] text-primary uppercase tracking-widest ml-1" htmlFor="email">E-MAIL</label>
-              <input 
-                className="w-full bg-[#1c1b1b] border-none rounded-lg py-4 px-4 text-[#e5e2e1] placeholder:text-[#5a4138] focus:ring-1 focus:ring-primary transition-all" 
-                id="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Ex: admin@futsal.com" 
-                type="email"
-                required
-              />
-            </div>
-            <div className="space-y-1.5">
-              <label className="font-headings font-bold text-[10px] text-primary uppercase tracking-widest ml-1" htmlFor="password">SENHA</label>
-              <input 
-                className="w-full bg-[#1c1b1b] border-none rounded-lg py-4 px-4 text-[#e5e2e1] placeholder:text-[#5a4138] focus:ring-1 focus:ring-primary transition-all" 
-                id="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Sua senha" 
-                type="password"
-                required
-              />
-            </div>
-
-            <div className="pt-4">
-              <button type="submit" className="w-full bg-gradient-to-br from-[#f06600] to-primary py-4 rounded-lg font-headings font-black text-[#7a3000] uppercase tracking-tighter text-lg shadow-[0_8px_24px_-10px_#f06600] active:scale-95 duration-150 transition-transform">
-                ENTRAR NA QUADRA
-              </button>
-            </div>
-          </form>
-
-          <div className="bg-[#1c1b1b] p-4 rounded-xl border border-[#353534] flex items-start gap-3">
-             <div className="bg-primary/20 p-2 rounded-lg mt-0.5">
-                <Info className="text-primary w-4 h-4" />
-             </div>
-             <div>
-                <p className="font-headings font-bold text-[10px] text-white uppercase tracking-widest mb-1">Acesso do Admin</p>
-                <p className="text-[10px] text-gray-500 font-medium">Use <span className="text-primary font-bold">admin@futsal.com</span> com senha <span className="text-primary font-bold">123</span> para entrar como organizador.</p>
-             </div>
-          </div>
         </div>
       </section>
     </main>
